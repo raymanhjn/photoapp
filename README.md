@@ -1,4 +1,4 @@
-This is a starter template for [Ionic](http://ionicframework.com/docs/) projects.
+The app is used for upload photos captured by phone camera and implement speach function.
 
 ## How to use this template
 
