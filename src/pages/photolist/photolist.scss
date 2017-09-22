@@ -1,3 +1,22 @@
 page-photolist {
+  .add_button {
+      margin-right: 15px;
+  }
 
+  .photo_card {
+    position: relative;
+    .delete_button {
+      color: #ffffff;
+      position: absolute;
+      text-align: center;
+      width: 16px;
+      height: 16px;
+      top: 5px;
+      right: 5px;
+      &:active {
+        top: 7px;
+        right: 6px;
+      }
+    }
+  }
 }

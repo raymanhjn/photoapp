@@ -3,7 +3,7 @@
     <ion-title center>photolist</ion-title>
     <ion-buttons end>
         <button ion-button icon-only>
-          <ion-icon name="add-circle"></ion-icon>
+          <ion-icon class='add_button' name="md-add" (click)="takePhoto()"></ion-icon>
         </button>
     </ion-buttons>
   </ion-navbar>
@@ -11,34 +11,14 @@
 
 
 <ion-content padding>
-  <ion-list>
-    <ion-item>
-      <ion-card>
-        <img src="../../assets/icon/favicon.ico"/>
-        <ion-card-content>
-          <ion-card-title>
-            Nine Inch Nails Live
-            </ion-card-title>
-          <p>
-            The most popular industrial group ever, and largely
-            responsible for bringing the music to a mass audience.
-          </p>
-        </ion-card-content>
-      </ion-card>
-    </ion-item>
-    <ion-item>
-      <ion-card>
-        <img src="../../assets/icon/favicon.ico"/>
-        <ion-card-content>
-          <ion-card-title>
-            Nine Inch Nails Live
-            </ion-card-title>
-          <p>
-            The most popular industrial group ever, and largely
-            responsible for bringing the music to a mass audience.
-          </p>
-        </ion-card-content>
-      </ion-card>
-    </ion-item>
-  </ion-list>
+  <ion-grid>
+    <ion-row>
+      <ion-col *ngFor="let photo of photos; let id = index" col-6>
+        <ion-card class="photo_card">
+          <ion-icon name="md-trash" class="delete_button" (click)="deletePhoto(id)"></ion-icon>
+          <img src="../../assets/images/app.jpg"/>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-content>
