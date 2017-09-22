@@ -2,8 +2,8 @@
   <ion-navbar>
     <ion-title center>photolist</ion-title>
     <ion-buttons end>
-        <button ion-button icon-only>
-          <ion-icon class='add_button' name="md-add" (click)="takePhoto()"></ion-icon>
+        <button ion-button icon-only (click)="takePhoto()">
+          <ion-icon class='add_button' name="md-add"></ion-icon>
         </button>
     </ion-buttons>
   </ion-navbar>
@@ -11,14 +11,12 @@
 
 
 <ion-content padding>
-  <ion-grid>
-    <ion-row>
-      <ion-col *ngFor="let photo of photos; let id = index" col-6>
-        <ion-card class="photo_card">
-          <ion-icon name="md-trash" class="delete_button" (click)="deletePhoto(id)"></ion-icon>
-          <img src="../../assets/images/app.jpg"/>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+      <ion-card class="photo_card">
+        <!-- <ion-icon name="md-trash" class="delete_button" (click)="getData()"></ion-icon> -->
+        <img [src]="photo"/>
+      </ion-card>
+      <ion-list *ngFor="let photoInfo of photoInfos">
+        <button class="des_button" ion-button block (click)="speak(photoInfo.description)">{{ photoInfo.description }}</button>
+      </ion-list>
+      <button ion-button color="danger" block (click)="getData()">info</button>
 </ion-content>
