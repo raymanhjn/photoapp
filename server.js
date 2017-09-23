@@ -3,10 +3,10 @@ var path = require('path');
 var app = express();
 
 
-app.use(express.static(path.resolve(__dirname, "www")));
+app.use(express.static(__dirname,'www'));
 app.set('port', process.env.PORT || 3000);
 
-app.get('/', function(req, res){
+app.get('*', function(req, res){
     res.sendFile(path.resolve(__dirname, 'www','index.html'));
 });
 
