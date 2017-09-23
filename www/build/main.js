@@ -67,7 +67,7 @@ HomePage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'page-home',template:/*ion-inline-start:"E:\front-end\photoapp\src\pages\home\home.html"*/'<ion-content padding class="home_container">\n\n  <button class="home_button" ion-button block (click)="goPhotoList()">\n\n    Take photo\n\n  </button>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\front-end\photoapp\src\pages\home\home.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */]])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */]])
 ], HomePage);
 
 //# sourceMappingURL=home.js.map
@@ -97,11 +97,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var PhotolistPage = (function () {
-    function PhotolistPage(navCtrl, alertCtrl, navParams, camera, http) {
+    function PhotolistPage(navCtrl, alertCtrl, navParams, camera, loadingCtrl, http) {
         this.navCtrl = navCtrl;
         this.alertCtrl = alertCtrl;
         this.navParams = navParams;
         this.camera = camera;
+        this.loadingCtrl = loadingCtrl;
         this.http = http;
     }
     PhotolistPage.prototype.ionViewWillEnter = function () {
@@ -111,10 +112,20 @@ var PhotolistPage = (function () {
         this.synth = window.speechSynthesis;
         this.voices = [];
         var video = this.videoEle.nativeElement;
+        //camera setup
+        var front = false;
+        var constraints = { video: { facingMode: (front ? "user" : "environment") } };
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
-                video.src = window.URL.createObjectURL(stream);
-                video.play();
+            navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+                if ("srcObject" in video) {
+                    video.srcObject = stream;
+                }
+                else {
+                    video.src = window.URL.createObjectURL(stream);
+                }
+                video.onloadedmetadata = function () {
+                    video.play();
+                };
             }, function (err) {
                 var alert = _this.alertCtrl.create({
                     title: 'Media device',
@@ -132,12 +143,12 @@ var PhotolistPage = (function () {
         }
         else {
             // no media deveice, so alert something out
-            var alert_1 = this.alertCtrl.create({
+            var alert = this.alertCtrl.create({
                 title: 'Media device',
                 subTitle: "No media devices found",
                 buttons: ['Ok']
             });
-            alert_1.present();
+            alert.present();
         }
     };
     //for the native device
@@ -199,14 +210,17 @@ var PhotolistPage = (function () {
         var base64 = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
         // console.log(base64);
         if (dataURL === null || dataURL === '') {
-            var alert_2 = this.alertCtrl.create({
+            var alert = this.alertCtrl.create({
                 title: 'Photo not found',
                 subTitle: "Please take a photo",
                 buttons: ['Ok']
             });
-            alert_2.present();
+            alert.present();
         }
         // set to Google Vision API and get data back
+        var loading = this.loadingCtrl.create({
+            content: 'Speaking, please wait'
+        });
         var headers = new __WEBPACK_IMPORTED_MODULE_3__angular_http__["a" /* Headers */]({ 'Content-Type': 'application/json' });
         var options = new __WEBPACK_IMPORTED_MODULE_3__angular_http__["d" /* RequestOptions */]({ headers: headers });
         var API_KEY = "AIzaSyDRgu_6xNGoVzR81dLP2LD2Pl4si3c0MVg";
@@ -230,10 +244,16 @@ var PhotolistPage = (function () {
             // console.log(JSON.parse(data['_body']));
             //get data back and set to photoInfos then set label buttons
             _this.photoInfos = JSON.parse(data['_body']).responses[0].labelAnnotations;
-            console.log(_this.photoInfos);
+            loading.present();
+            var words = _this.photoInfos.map(function (photoInfo) {
+                _this.speak(photoInfo.description);
+                return photoInfo.description;
+            });
+            console.log(words);
         }, function (err) {
             console.log(err);
         });
+        loading.dismiss();
     };
     PhotolistPage.prototype.speak = function (content) {
         var speakContent = new SpeechSynthesisUtterance(content);
@@ -245,23 +265,20 @@ var PhotolistPage = (function () {
 }());
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])('video'),
-    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */])
+    __metadata("design:type", typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _a || Object)
 ], PhotolistPage.prototype, "videoEle", void 0);
 __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_13" /* ViewChild */])('canvas'),
-    __metadata("design:type", __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */])
+    __metadata("design:type", typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_0__angular_core__["u" /* ElementRef */]) === "function" && _b || Object)
 ], PhotolistPage.prototype, "canvasEle", void 0);
 PhotolistPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'page-photolist',template:/*ion-inline-start:"E:\front-end\photoapp\src\pages\photolist\photolist.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title center>Photo Vision</ion-title>\n\n    <ion-buttons end>\n\n        <button ion-button icon-only (click)="takePhoto()">\n\n          <ion-icon class=\'add_button\' name="md-add"></ion-icon>\n\n        </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n\n\n<ion-content padding>\n\n    <ion-toolbar>\n\n      <ion-title>Video screen</ion-title>\n\n    </ion-toolbar>\n\n    <video #video width="640" height="480" autoplay></video>\n\n    <ion-buttons end>\n\n        <button ion-button icon-only class=\'photo_button\' (click)="snapPhoto()">\n\n          <ion-icon  name="md-camera"></ion-icon>\n\n        </button>\n\n    </ion-buttons>\n\n    <ion-toolbar>\n\n      <ion-title>Image screen</ion-title>\n\n    </ion-toolbar>\n\n    <canvas #canvas width="640" height="480"></canvas>\n\n\n\n    <ion-list *ngFor="let photoInfo of photoInfos">\n\n      <button class="des_button" ion-button block (click)="speak(photoInfo.description)">{{ photoInfo.description }}</button>\n\n    </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\front-end\photoapp\src\pages\photolist\photolist.html"*/,
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */],
-        __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavParams */],
-        __WEBPACK_IMPORTED_MODULE_2__ionic_native_camera__["a" /* Camera */],
-        __WEBPACK_IMPORTED_MODULE_3__angular_http__["b" /* Http */]])
+    __metadata("design:paramtypes", [typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2__ionic_native_camera__["a" /* Camera */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__ionic_native_camera__["a" /* Camera */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* LoadingController */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_3__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_http__["b" /* Http */]) === "function" && _h || Object])
 ], PhotolistPage);
 
+var _a, _b, _c, _d, _e, _f, _g, _h;
 //# sourceMappingURL=photolist.js.map
 
 /***/ }),
@@ -387,9 +404,9 @@ var MyApp = (function () {
     return MyApp;
 }());
 MyApp = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"E:\front-end\photoapp\src\app\app.html"*/'<ion-nav [root]="rootPage"></ion-nav>\n'/*ion-inline-end:"E:\front-end\photoapp\src\app\app.html"*/
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"E:\front-end\photoapp\src\app\app.html"*/'<ion-nav [root]="rootPage"></ion-nav>\n\n'/*ion-inline-end:"E:\front-end\photoapp\src\app\app.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */]])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */]])
 ], MyApp);
 
 //# sourceMappingURL=app.component.js.map
