@@ -1,5 +1,5 @@
 import { Component ,ElementRef, ViewChild } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, AlertController  } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Http, Headers, RequestOptions } from '@angular/http';
 
@@ -22,6 +22,7 @@ export class PhotolistPage {
 
   constructor(
       public navCtrl: NavController,
+      public alertCtrl: AlertController,
       public navParams: NavParams,
       private camera: Camera,
       public http: Http,
@@ -39,7 +40,28 @@ export class PhotolistPage {
         navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
             video.src = window.URL.createObjectURL(stream);
             video.play();
+        }, err => {
+          let alert = this.alertCtrl.create({
+            title: 'Media device',
+            subTitle: err.name,
+            buttons: [{
+              text: 'Ok',
+              role: 'cancel',
+              handler: () => {
+                // this.navCtrl.pop();
+              }
+            }]
+          });
+          alert.present();
         });
+    }else{
+      // no media deveice, so alert something out
+      let alert = this.alertCtrl.create({
+        title: 'Media device',
+        subTitle: "No media devices found",
+        buttons: ['Ok']
+      });
+      alert.present();
     }
   }
 
@@ -98,7 +120,6 @@ export class PhotolistPage {
     window.speechSynthesis.speak(speakContent);
   }
 
-
   //for web
   snapPhoto() {
     //show on canvas dom
@@ -110,7 +131,14 @@ export class PhotolistPage {
     let dataURL = this.canvasEle.nativeElement.toDataURL("image/png");
     let base64 = dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
     // console.log(base64);
-
+    if(dataURL === null || dataURL === ''){
+      let alert = this.alertCtrl.create({
+        title: 'Photo not found',
+        subTitle: "Please take a photo",
+        buttons: ['Ok']
+      });
+      alert.present();
+    }
     // set to Google Vision API and get data back
     let headers = new Headers({'Content-Type' : 'application/json'});
     let options = new RequestOptions({ headers: headers });
@@ -130,7 +158,6 @@ export class PhotolistPage {
         }
       ]
     });
-
     this.http.post(url, request, options)
       .subscribe( data => {
         // console.log(JSON.parse(data['_body']));

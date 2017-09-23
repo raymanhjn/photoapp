@@ -11,11 +11,21 @@
 
 
 <ion-content padding>
-      <video #video width="640" height="480" autoplay></video>
-      <button class="des_button" ion-button color="danger" block (click)="snapPhoto()">Snap Photo</button>
-      <canvas #canvas width="640" height="480"></canvas>
+    <ion-toolbar>
+      <ion-title>Video screen</ion-title>
+    </ion-toolbar>
+    <video #video width="640" height="480" autoplay></video>
+    <ion-buttons end>
+        <button ion-button icon-only (click)="snapPhoto()">
+          <ion-icon class='photo_button' name="md-camera"></ion-icon>
+        </button>
+    </ion-buttons>
+    <ion-toolbar>
+      <ion-title>Image screen</ion-title>
+    </ion-toolbar>
+    <canvas #canvas width="640" height="480"></canvas>
 
-      <ion-list *ngFor="let photoInfo of photoInfos">
-        <button class="des_button" ion-button block (click)="speak(photoInfo.description)">{{ photoInfo.description }}</button>
-      </ion-list>
+    <ion-list *ngFor="let photoInfo of photoInfos">
+      <button class="des_button" ion-button block (click)="speak(photoInfo.description)">{{ photoInfo.description }}</button>
+    </ion-list>
 </ion-content>

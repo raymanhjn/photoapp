@@ -3,6 +3,14 @@ page-photolist {
       margin-right: 15px;
   }
 
+  .button-ios {
+    background-color:#ffffff;
+  }
+
+  .photo_button {
+    color: color($colors, danger);
+  }
+
   .des_button {
     text-align: center;
     width: 80%;
@@ -28,10 +36,11 @@ page-photolist {
   }
 
   video,canvas {
+    border: 1px solid black;
     width: 100%;
     max-width: 640px;
     height: auto;
-    margin: 10px auto;
+    margin: 10px auto 0;
     display: block;
   }
 }
