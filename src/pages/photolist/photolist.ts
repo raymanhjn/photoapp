@@ -174,38 +174,31 @@ export class PhotolistPage {
         //get data back and set to photoInfos then set label buttons
         this.photoInfos = JSON.parse(data['_body']).responses[0].labelAnnotations;
         let words = this.photoInfos.map ( (photoInfo) => {
+          this.speak(photoInfo.description);
           return photoInfo.description;
         });
-        this.speakWords(words);
+        // this.speakWords(words);
         console.log(words);
       }, err => {
         console.log(err);
       });
   }
   //
-  // speak(content) {
-  //   let speakContent = new SpeechSynthesisUtterance(content);
-  //   this.voices = this.synth.getVoices();
-  //   speakContent.voice = this.voices[0];
-  //   this.synth.speak(speakContent);
-  // }
-
-  speakWords(words) {
-    let loading = this.loadingCtrl.create({
-      content:'Speaking, please wait'
-    });
-    loading.present();
+  speak(content) {
+    let speakContent = new SpeechSynthesisUtterance(content);
     this.voices = this.synth.getVoices();
-
-    words.map( word => {
-      let speakContent = new SpeechSynthesisUtterance(word);
-      speakContent.voice = this.voices[0];
-      this.voices = this.synth.getVoices();
-      speakContent.voice = this.voices[0];
-      this.synth.speak(speakContent);
-    });
-    setTimeout( ()=> {
-      loading.dismiss();
-    }, words.length*1500);
+    speakContent.voice = this.voices[0];
+    this.synth.speak(speakContent);
   }
+
+  // speakWords(words) {
+  //   this.voices = this.synth.getVoices();
+  //   words.map( word => {
+  //     let speakContent = new SpeechSynthesisUtterance(word);
+  //     speakContent.voice = this.voices[0];
+  //     this.voices = this.synth.getVoices();
+  //     speakContent.voice = this.voices[0];
+  //     this.synth.speak(speakContent);
+  //   });
+  // }
 }
