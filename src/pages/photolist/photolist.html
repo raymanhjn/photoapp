@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <ion-title center>photolist</ion-title>
+    <ion-title center>Photo Vision</ion-title>
     <ion-buttons end>
         <button ion-button icon-only (click)="takePhoto()">
           <ion-icon class='add_button' name="md-add"></ion-icon>
@@ -10,22 +10,12 @@
 </ion-header>
 
 
-
-
 <ion-content padding>
-
       <video #video width="640" height="480" autoplay></video>
-      <button ion-button color="danger" block (click)="snapPhoto()">Snap Photo</button>
+      <button class="des_button" ion-button color="danger" block (click)="snapPhoto()">Snap Photo</button>
       <canvas #canvas width="640" height="480"></canvas>
 
-      <ion-card class="photo_card">
-        <!-- <ion-icon name="md-trash" class="delete_button" (click)="getData()"></ion-icon> -->
-        <img [src]="photo"/>
-      </ion-card>
       <ion-list *ngFor="let photoInfo of photoInfos">
         <button class="des_button" ion-button block (click)="speak(photoInfo.description)">{{ photoInfo.description }}</button>
       </ion-list>
-      <button ion-button color="danger" block (click)="getData()">upload and get info </button>
-      <button ion-button color="danger" block (click)="speak('text')">text</button>
-      <button ion-button color="danger" block (click)="snapPhoto()">take snap</button>
 </ion-content>

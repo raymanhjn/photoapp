@@ -5,6 +5,9 @@ page-photolist {
 
   .des_button {
     text-align: center;
+    width: 80%;
+    max-width: 600px;
+    margin: 5px auto;
   }
 
   .photo_card {
@@ -22,5 +25,13 @@ page-photolist {
         right: 6px;
       }
     }
+  }
+
+  video,canvas {
+    width: 100%;
+    max-width: 640px;
+    height: auto;
+    margin: 10px auto;
+    display: block;
   }
 }
