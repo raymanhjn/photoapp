@@ -10,7 +10,14 @@
 </ion-header>
 
 
+
+
 <ion-content padding>
+
+      <video #video width="640" height="480" autoplay></video>
+      <button ion-button color="danger" block (click)="snapPhoto()">Snap Photo</button>
+      <canvas #canvas width="640" height="480"></canvas>
+
       <ion-card class="photo_card">
         <!-- <ion-icon name="md-trash" class="delete_button" (click)="getData()"></ion-icon> -->
         <img [src]="photo"/>
@@ -18,5 +25,7 @@
       <ion-list *ngFor="let photoInfo of photoInfos">
         <button class="des_button" ion-button block (click)="speak(photoInfo.description)">{{ photoInfo.description }}</button>
       </ion-list>
-      <button ion-button color="danger" block (click)="getData()">info</button>
+      <button ion-button color="danger" block (click)="getData()">upload and get info </button>
+      <button ion-button color="danger" block (click)="speak('text')">text</button>
+      <button ion-button color="danger" block (click)="snapPhoto()">take snap</button>
 </ion-content>
