@@ -20,6 +20,8 @@ export class PhotolistPage {
   photoInfos:any;
   synth:any;
   voices:any;
+  text: string;
+
 
   constructor(
       public navCtrl: NavController,
@@ -68,11 +70,11 @@ export class PhotolistPage {
             }
           ],
           "image": {
-              // "content":this.imageUrl
-              "source":{
-                "imageUri":
-                  "gs://photoapp_images/demo-image.jpg"
-              }
+              "content":this.imageUrl
+              // "source":{
+              //   "imageUri":
+              //     "gs://photoapp_images/demo-image.jpg"
+              // }
           }
         }
       ]
@@ -80,7 +82,7 @@ export class PhotolistPage {
 
     this.http.post(url, request, options)
       .subscribe( data => {
-        console.log(JSON.parse(data['_body']));
+        // console.log(JSON.parse(data['_body']));
         this.photoInfos = JSON.parse(data['_body']).responses[0].labelAnnotations;
         console.log(this.photoInfos);
       }, err => {
@@ -94,7 +96,6 @@ export class PhotolistPage {
     // this.voices = this.synth.getVoices();
     // speakContent.voice = this.voices[0];
     // window.speechSynthesis.speak(speakContent);
-    alert(content);
   }
 
 
