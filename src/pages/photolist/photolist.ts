@@ -1,5 +1,5 @@
 import { Component ,ElementRef, ViewChild } from '@angular/core';
-import { NavController, NavParams, AlertController  } from 'ionic-angular';
+import { NavController, NavParams, AlertController ,LoadingController } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Http, Headers, RequestOptions } from '@angular/http';
 
@@ -25,6 +25,7 @@ export class PhotolistPage {
       public alertCtrl: AlertController,
       public navParams: NavParams,
       private camera: Camera,
+      private loadingCtrl: LoadingController,
       public http: Http,
     ) {
   }
@@ -145,6 +146,9 @@ export class PhotolistPage {
       alert.present();
     }
     // set to Google Vision API and get data back
+    let loading = this.loadingCtrl.create({
+      content:'Speaking, please wait'
+    });
 
     let headers = new Headers({'Content-Type' : 'application/json'});
     let options = new RequestOptions({ headers: headers });
@@ -169,6 +173,8 @@ export class PhotolistPage {
         // console.log(JSON.parse(data['_body']));
         //get data back and set to photoInfos then set label buttons
         this.photoInfos = JSON.parse(data['_body']).responses[0].labelAnnotations;
+
+        loading.present();
         let words = this.photoInfos.map ( (photoInfo) => {
           this.speak(photoInfo.description);
           return photoInfo.description;
@@ -177,6 +183,8 @@ export class PhotolistPage {
       }, err => {
         console.log(err);
       });
+
+      loading.dismiss();
   }
 
   speak(content) {
