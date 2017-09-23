@@ -68,9 +68,11 @@ export class PhotolistPage {
             }
           ],
           "image": {
-              "content":this.imageUrl
-              // "imageUri":
-              //   "gs://photoapp_images/demo-image.jpg"
+              // "content":this.imageUrl
+              "source":{
+                "imageUri":
+                  "gs://photoapp_images/demo-image.jpg"
+              }
           }
         }
       ]
@@ -89,9 +91,10 @@ export class PhotolistPage {
 
   speak(content) {
     let speakContent = new SpeechSynthesisUtterance(content);
-    this.voices = this.synth.getVoices();
-    speakContent.voice = this.voices[0];
-    window.speechSynthesis.speak(speakContent);
+    // this.voices = this.synth.getVoices();
+    // speakContent.voice = this.voices[0];
+    // window.speechSynthesis.speak(speakContent);
+    alert(content);
   }
 
 
