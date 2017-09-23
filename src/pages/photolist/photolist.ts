@@ -83,6 +83,7 @@ export class PhotolistPage {
     });
   }
 
+  //for the native device
   getData(imageData) {
     let headers = new Headers({'Content-Type' : 'application/json'});
     let options = new RequestOptions({ headers: headers });
@@ -111,13 +112,6 @@ export class PhotolistPage {
       }, err => {
         console.log(err);
       });
-  }
-
-  speak(content) {
-    let speakContent = new SpeechSynthesisUtterance(content);
-    this.voices = this.synth.getVoices();
-    speakContent.voice = this.voices[0];
-    window.speechSynthesis.speak(speakContent);
   }
 
   //for web
@@ -169,4 +163,10 @@ export class PhotolistPage {
       });
   }
 
+  speak(content) {
+    let speakContent = new SpeechSynthesisUtterance(content);
+    this.voices = this.synth.getVoices();
+    speakContent.voice = this.voices[0];
+    this.synth.speak(speakContent);
+  }
 }
