@@ -43,7 +43,7 @@ export class PhotolistPage {
     let constraints = { video: { facingMode: (front? "user" : "environment") } };
 
     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({video:true}).then(function(stream) {
+        navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
           // if("srcObject" in video) {
           //   video.srcObject = stream;
           // } else {
@@ -62,7 +62,7 @@ export class PhotolistPage {
               text: 'Ok',
               role: 'cancel',
               handler: () => {
-                // this.navCtrl.pop();
+                this.navCtrl.pop();
               }
             }]
           });
