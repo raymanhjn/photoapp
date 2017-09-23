@@ -19,6 +19,7 @@ export class PhotolistPage {
   synth:any;
   voices:any;
   text: string;
+  words:any;
 
   constructor(
       public navCtrl: NavController,
@@ -147,9 +148,8 @@ export class PhotolistPage {
       });
       alert.present();
     }
+
     // set to Google Vision API and get data back
-
-
     let headers = new Headers({'Content-Type' : 'application/json'});
     let options = new RequestOptions({ headers: headers });
     let API_KEY = "AIzaSyDRgu_6xNGoVzR81dLP2LD2Pl4si3c0MVg";
@@ -173,32 +173,31 @@ export class PhotolistPage {
         // console.log(JSON.parse(data['_body']));
         //get data back and set to photoInfos then set label buttons
         this.photoInfos = JSON.parse(data['_body']).responses[0].labelAnnotations;
-        let words = this.photoInfos.map ( (photoInfo) => {
-          this.speak(photoInfo.description);
+        let labels = this.photoInfos.map ( (photoInfo) => {
           return photoInfo.description;
         });
-        // this.speakWords(words);
-        console.log(words);
+        this.speakWords(labels);
+        this.words = labels;
+        console.log(labels);
       }, err => {
         console.log(err);
       });
   }
   //
-  speak(content) {
-    let speakContent = new SpeechSynthesisUtterance(content);
-    this.voices = this.synth.getVoices();
-    speakContent.voice = this.voices[0];
-    this.synth.speak(speakContent);
-  }
-
-  // speakWords(words) {
+  // speak(content) {
+  //   let speakContent = new SpeechSynthesisUtterance(content);
   //   this.voices = this.synth.getVoices();
-  //   words.map( word => {
-  //     let speakContent = new SpeechSynthesisUtterance(word);
-  //     speakContent.voice = this.voices[0];
-  //     this.voices = this.synth.getVoices();
-  //     speakContent.voice = this.voices[0];
-  //     this.synth.speak(speakContent);
-  //   });
+  //   speakContent.voice = this.voices[0];
+  //   this.synth.speak(speakContent);
   // }
+
+  speakWords(names) {
+    let wordArray=names?names:this.words;
+    this.voices = this.synth.getVoices();
+    wordArray.map( word => {
+      let speakContent = new SpeechSynthesisUtterance(word);
+      speakContent.voice = this.voices[0];
+      this.synth.speak(speakContent);
+    });
+  }
 }

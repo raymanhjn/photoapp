@@ -24,7 +24,12 @@
       <ion-title>Image screen</ion-title>
     </ion-toolbar>
     <canvas #canvas width="640" height="480"></canvas>
-
+    <ion-buttons end>
+       If you are IOS users, press
+        <button ion-button icon-only class='photo_button' (click)="speakWords()">
+          <ion-icon  name="md-volume-up"></ion-icon>
+        </button>
+    </ion-buttons>
     <ion-list *ngFor="let photoInfo of photoInfos">
       <ion-badge>{{ photoInfo.description }}</ion-badge>
     </ion-list>
