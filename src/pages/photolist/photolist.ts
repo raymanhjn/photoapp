@@ -36,10 +36,21 @@ export class PhotolistPage {
     this.voices=[];
 
     let video =  this.videoEle.nativeElement;
+
+    //camera setup
+    let front = false;
+    let constraints = { video: { facingMode: (front? "user" : "environment") } };
+
     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true }).then(function(stream) {
+        navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
+          if("srcObject" in video) {
+            video.srcObject = stream;
+          } else {
             video.src = window.URL.createObjectURL(stream);
+          }
+          video.onloadedmetadata = () => {
             video.play();
+          }
         }, err => {
           let alert = this.alertCtrl.create({
             title: 'Media device',
