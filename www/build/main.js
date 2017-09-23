@@ -67,7 +67,7 @@ HomePage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
         selector: 'page-home',template:/*ion-inline-start:"E:\front-end\photoapp\src\pages\home\home.html"*/'<ion-content padding class="home_container">\n\n  <button class="home_button" ion-button block (click)="goPhotoList()">\n\n    Take photo\n\n  </button>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\front-end\photoapp\src\pages\home\home.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */]])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */]])
 ], HomePage);
 
 //# sourceMappingURL=home.js.map
@@ -97,12 +97,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var PhotolistPage = (function () {
-    function PhotolistPage(navCtrl, alertCtrl, navParams, camera, loadingCtrl, http) {
+    function PhotolistPage(navCtrl, alertCtrl, navParams, camera, http) {
         this.navCtrl = navCtrl;
         this.alertCtrl = alertCtrl;
         this.navParams = navParams;
         this.camera = camera;
-        this.loadingCtrl = loadingCtrl;
         this.http = http;
     }
     PhotolistPage.prototype.ionViewWillEnter = function () {
@@ -116,15 +115,7 @@ var PhotolistPage = (function () {
         var front = false;
         var constraints = { video: { facingMode: (front ? "user" : "environment") } };
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true }).then(function (stream) {
-                // if("srcObject" in video) {
-                //   video.srcObject = stream;
-                // } else {
-                //   video.src = window.URL.createObjectURL(stream);
-                // }
-                // video.onloadedmetadata = () => {
-                //   video.play();
-                // }
+            navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
                 video.src = window.URL.createObjectURL(stream);
                 video.play();
             }, function (err) {
@@ -242,11 +233,12 @@ var PhotolistPage = (function () {
             // console.log(JSON.parse(data['_body']));
             //get data back and set to photoInfos then set label buttons
             _this.photoInfos = JSON.parse(data['_body']).responses[0].labelAnnotations;
-            var words = _this.photoInfos.map(function (photoInfo) {
+            var labels = _this.photoInfos.map(function (photoInfo) {
                 return photoInfo.description;
             });
-            _this.speakWords(words);
-            console.log(words);
+            _this.speakWords(labels);
+            _this.words = labels;
+            console.log(labels);
         }, function (err) {
             console.log(err);
         });
@@ -258,23 +250,15 @@ var PhotolistPage = (function () {
     //   speakContent.voice = this.voices[0];
     //   this.synth.speak(speakContent);
     // }
-    PhotolistPage.prototype.speakWords = function (words) {
+    PhotolistPage.prototype.speakWords = function (names) {
         var _this = this;
-        var loading = this.loadingCtrl.create({
-            content: 'Speaking, please wait'
-        });
-        loading.present();
+        var wordArray = names ? names : this.words;
         this.voices = this.synth.getVoices();
-        words.map(function (word) {
+        wordArray.map(function (word) {
             var speakContent = new SpeechSynthesisUtterance(word);
-            speakContent.voice = _this.voices[0];
-            _this.voices = _this.synth.getVoices();
             speakContent.voice = _this.voices[0];
             _this.synth.speak(speakContent);
         });
-        setTimeout(function () {
-            loading.dismiss();
-        }, words.length * 1500);
     };
     return PhotolistPage;
 }());
@@ -288,12 +272,12 @@ __decorate([
 ], PhotolistPage.prototype, "canvasEle", void 0);
 PhotolistPage = __decorate([
     Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
-        selector: 'page-photolist',template:/*ion-inline-start:"E:\front-end\photoapp\src\pages\photolist\photolist.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title center>Photo Vision</ion-title>\n\n    <ion-buttons end>\n\n        <button ion-button icon-only (click)="takePhoto()">\n\n          <ion-icon class=\'add_button\' name="md-add"></ion-icon>\n\n        </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n\n\n<ion-content padding>\n\n    <ion-toolbar>\n\n      <ion-title>Video screen</ion-title>\n\n    </ion-toolbar>\n\n    <video #video width="640" height="480" autoplay></video>\n\n    <ion-buttons end>\n\n        <button ion-button icon-only class=\'photo_button\' (click)="snapPhoto()">\n\n          <ion-icon  name="md-camera"></ion-icon>\n\n        </button>\n\n    </ion-buttons>\n\n    <ion-toolbar>\n\n      <ion-title>Image screen</ion-title>\n\n    </ion-toolbar>\n\n    <canvas #canvas width="640" height="480"></canvas>\n\n\n\n    <ion-list *ngFor="let photoInfo of photoInfos">\n\n      <ion-badge>{{ photoInfo.description }}</ion-badge>\n\n    </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\front-end\photoapp\src\pages\photolist\photolist.html"*/,
+        selector: 'page-photolist',template:/*ion-inline-start:"E:\front-end\photoapp\src\pages\photolist\photolist.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title center>Photo Vision</ion-title>\n\n    <ion-buttons end>\n\n        <button ion-button icon-only (click)="takePhoto()">\n\n          <ion-icon class=\'add_button\' name="md-add"></ion-icon>\n\n        </button>\n\n    </ion-buttons>\n\n  </ion-navbar>\n\n</ion-header>\n\n<ion-content padding>\n\n    <ion-toolbar>\n\n      <ion-title>Video screen</ion-title>\n\n    </ion-toolbar>\n\n    <video #video width="640" height="480" autoplay></video>\n\n    <ion-buttons end>\n\n        <button ion-button icon-only class=\'photo_button\' (click)="snapPhoto()">\n\n          <ion-icon  name="md-camera"></ion-icon>\n\n        </button>\n\n    </ion-buttons>\n\n    <ion-toolbar>\n\n      <ion-title>Image screen</ion-title>\n\n    </ion-toolbar>\n\n    <canvas #canvas width="640" height="480"></canvas>\n\n    <ion-buttons end>\n\n       If you are IOS users, press\n\n        <button ion-button icon-only class=\'photo_button\' (click)="speakWords()">\n\n          <ion-icon  name="md-volume-up"></ion-icon>\n\n        </button>\n\n    </ion-buttons>\n\n    <ion-list *ngFor="let photoInfo of photoInfos">\n\n      <ion-badge>{{ photoInfo.description }}</ion-badge>\n\n    </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"E:\front-end\photoapp\src\pages\photolist\photolist.html"*/,
     }),
-    __metadata("design:paramtypes", [typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavController */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* NavParams */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2__ionic_native_camera__["a" /* Camera */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__ionic_native_camera__["a" /* Camera */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* LoadingController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* LoadingController */]) === "function" && _g || Object, typeof (_h = typeof __WEBPACK_IMPORTED_MODULE_3__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_http__["b" /* Http */]) === "function" && _h || Object])
+    __metadata("design:paramtypes", [typeof (_c = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */]) === "function" && _c || Object, typeof (_d = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["a" /* AlertController */]) === "function" && _d || Object, typeof (_e = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavParams */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* NavParams */]) === "function" && _e || Object, typeof (_f = typeof __WEBPACK_IMPORTED_MODULE_2__ionic_native_camera__["a" /* Camera */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__ionic_native_camera__["a" /* Camera */]) === "function" && _f || Object, typeof (_g = typeof __WEBPACK_IMPORTED_MODULE_3__angular_http__["b" /* Http */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_3__angular_http__["b" /* Http */]) === "function" && _g || Object])
 ], PhotolistPage);
 
-var _a, _b, _c, _d, _e, _f, _g, _h;
+var _a, _b, _c, _d, _e, _f, _g;
 //# sourceMappingURL=photolist.js.map
 
 /***/ }),
@@ -419,9 +403,9 @@ var MyApp = (function () {
     return MyApp;
 }());
 MyApp = __decorate([
-    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"E:\front-end\photoapp\src\app\app.html"*/'<ion-nav [root]="rootPage"></ion-nav>\n\n'/*ion-inline-end:"E:\front-end\photoapp\src\app\app.html"*/
+    Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({template:/*ion-inline-start:"E:\front-end\photoapp\src\app\app.html"*/'<ion-nav [root]="rootPage"></ion-nav>\n'/*ion-inline-end:"E:\front-end\photoapp\src\app\app.html"*/
     }),
-    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["h" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */]])
+    __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["g" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */]])
 ], MyApp);
 
 //# sourceMappingURL=app.component.js.map

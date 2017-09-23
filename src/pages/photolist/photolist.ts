@@ -1,5 +1,5 @@
 import { Component ,ElementRef, ViewChild } from '@angular/core';
-import { NavController, NavParams, AlertController ,LoadingController } from 'ionic-angular';
+import { NavController, NavParams, AlertController  } from 'ionic-angular';
 import { Camera, CameraOptions } from '@ionic-native/camera';
 import { Http, Headers, RequestOptions } from '@angular/http';
 
@@ -26,7 +26,6 @@ export class PhotolistPage {
       public alertCtrl: AlertController,
       public navParams: NavParams,
       private camera: Camera,
-      private loadingCtrl: LoadingController,
       public http: Http,
     ) {
   }
@@ -45,14 +44,6 @@ export class PhotolistPage {
 
     if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia(constraints).then(function(stream) {
-          // if("srcObject" in video) {
-          //   video.srcObject = stream;
-          // } else {
-          //   video.src = window.URL.createObjectURL(stream);
-          // }
-          // video.onloadedmetadata = () => {
-          //   video.play();
-          // }
           video.src = window.URL.createObjectURL(stream);
           video.play();
         }, err => {
@@ -63,7 +54,7 @@ export class PhotolistPage {
               text: 'Ok',
               role: 'cancel',
               handler: () => {
-                this.navCtrl.pop();
+                // this.navCtrl.pop();
               }
             }]
           });
