@@ -25257,3 +25257,9 @@ page-photolist video, page-photolist canvas {
   margin: 10px auto 0;
   display: block;
 }
+
+page-photolist .list-md {
+  margin: 5px 2px;
+  display: inline-block;
+  padding: 2px;
+}

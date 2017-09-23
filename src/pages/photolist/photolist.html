@@ -26,6 +26,6 @@
     <canvas #canvas width="640" height="480"></canvas>
 
     <ion-list *ngFor="let photoInfo of photoInfos">
-      <button class="des_button" ion-button block (click)="speak(photoInfo.description)">{{ photoInfo.description }}</button>
+      <ion-badge>{{ photoInfo.description }}</ion-badge>
     </ion-list>
 </ion-content>
