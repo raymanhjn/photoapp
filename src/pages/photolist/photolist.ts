@@ -145,6 +145,7 @@ export class PhotolistPage {
       alert.present();
     }
     // set to Google Vision API and get data back
+
     let headers = new Headers({'Content-Type' : 'application/json'});
     let options = new RequestOptions({ headers: headers });
     let API_KEY = "AIzaSyDRgu_6xNGoVzR81dLP2LD2Pl4si3c0MVg";
@@ -168,7 +169,11 @@ export class PhotolistPage {
         // console.log(JSON.parse(data['_body']));
         //get data back and set to photoInfos then set label buttons
         this.photoInfos = JSON.parse(data['_body']).responses[0].labelAnnotations;
-        console.log(this.photoInfos);
+        let words = this.photoInfos.map ( (photoInfo) => {
+          this.speak(photoInfo.description);
+          return photoInfo.description;
+        });
+        console.log(words);
       }, err => {
         console.log(err);
       });
