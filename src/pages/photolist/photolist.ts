@@ -93,9 +93,9 @@ export class PhotolistPage {
 
   speak(content) {
     let speakContent = new SpeechSynthesisUtterance(content);
-    // this.voices = this.synth.getVoices();
-    // speakContent.voice = this.voices[0];
-    // window.speechSynthesis.speak(speakContent);
+    this.voices = this.synth.getVoices();
+    speakContent.voice = this.voices[0];
+    window.speechSynthesis.speak(speakContent);
   }
 
 
